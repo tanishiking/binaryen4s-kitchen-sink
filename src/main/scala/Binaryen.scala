@@ -82,12 +82,9 @@ trait Binaryen extends Library {
   def BinaryenTypeExpand(t: BinaryenType, buf: Array[BinaryenType]): Unit
 
   // Packed types (call to get the value of each; you can cache them)
-
-  // typedef uint32_t BinaryenPackedType;
-  //
-  // BINARYEN_API BinaryenPackedType BinaryenPackedTypeNotPacked(void);
-  // BINARYEN_API BinaryenPackedType BinaryenPackedTypeInt8(void);
-  // BINARYEN_API BinaryenPackedType BinaryenPackedTypeInt16(void);
+  def BinaryenPackedTypeNotPacked(): BinaryenPackedType
+  def BinaryenPackedTypeInt8(): BinaryenPackedType
+  def BinaryenPackedTypeInt16(): BinaryenPackedType
 
   def BinaryenHeapTypeExt(): BinaryenHeapType
   def BinaryenHeapTypeFunc(): BinaryenHeapType
@@ -154,7 +151,7 @@ trait Binaryen extends Library {
   def BinaryenModuleDispose(module: BinaryenModuleRef): Unit
 
   // Literals. These are passes by value.
-  def BinaryenLiteralInt32(x: Int): BinaryenLiteral
+  def BinaryenLiteralInt32(x: Integer): BinaryenLiteral
   def BinaryenLiteralInt64(x: Long): BinaryenLiteral
   def BinaryenLiteralFloat32(x: Float): BinaryenLiteral
   def BinaryenLiteralFloat64(x: Double): BinaryenLiteral

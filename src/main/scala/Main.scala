@@ -1,30 +1,21 @@
 @main def hello: Unit =
-  val b = Binaryen()
-  import b._
+  System.setProperty("jna.library.path", "/opt/homebrew/lib/")
+  incr()
 
-  b.BinaryenSetColorsEnabled(true)
+def incr(): Unit =
+  val b = BinaryenLibrary.INSTANCE
+  val module = b.BinaryenModuleCreate()
 
-  val module: BinaryenModuleRef = b.BinaryenModuleCreate()
+  // val params = b.BinaryenTypeCreate(Array(b.BinaryenTypeInt32()), 1)
+  val params = b.BinaryenTypeInt32()
+  val result = b.BinaryenTypeInt32()
 
-  // Create a function type for  i32 (i32, i32)
-  val params = b.BinaryenTypeCreate(Array(b.BinaryenTypeInt32(), b.BinaryenTypeInt32()), 2)
-  val results = b.BinaryenTypeInt32()
-
-  // // Get the 0 and 1 arguments, and add them
   val x = b.BinaryenLocalGet(module, 0, b.BinaryenTypeInt32())
-  val y = b.BinaryenLocalGet(module, 1, b.BinaryenTypeInt32())
-  val add: BinaryenExpressionRef = b.BinaryenBinary(module, b.BinaryenAddInt32(), x, y)
+  val one = b.BinaryenConst(module, b.BinaryenLiteralInt32(1))
+  val add = b.BinaryenBinary(module, b.BinaryenAddInt32(), x, one)
 
-  // Create the add function
-  // Note: no additional local variables
-  // Note: no basic blocks here, we are an AST. The function body is just an expression node.
-  val adder: BinaryenFunctionRef = b.BinaryenAddFunction(module, "adder", params, results, null, 0, add)
+  b.BinaryenAddFunction(module, "adder", params, result, null, 0, add)
 
-  // // Print it out
-  // println("WRAPPER VERSION: ${Binaryen.VERSION}")
-  // println("WASM OUTPUT:")
   b.BinaryenModulePrint(module)
-  b.BinaryenModulePrintStackIR(module, false)
-
-  // // Clean up the module, which owns all the objects we created above
   b.BinaryenModuleDispose(module)
+
