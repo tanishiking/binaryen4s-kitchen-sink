@@ -88,9 +88,9 @@ public interface BinaryenLibrary extends Library {
     int BinaryenSignatureTypeGetParams(BinaryenHeapType heapType);
     int BinaryenSignatureTypeGetResults(BinaryenHeapType heapType);
 
-    int intGetHeapType(int type);
-    int intIsNullable(int type);
-    int intFromHeapType(BinaryenHeapType heapType, boolean nullable);
+    BinaryenHeapType BinaryenTypeGetHeapType(BinaryenType type);
+    boolean BinaryenTypeIsNullable(BinaryenType type);
+    BinaryenType BinaryenTypeFromHeapType(BinaryenHeapType heapType, boolean nullable);
 
     // TODO: typedef uint32_t BinaryenExternalKind;
     // TODO: BinaryenFeature
@@ -726,7 +726,7 @@ public interface BinaryenLibrary extends Library {
     public static class BinaryenGlobalRef extends PointerType {};
     BinaryenGlobalRef BinaryenAddGlobal(BinaryenModuleRef module,
                                          String name,
-                                         int type,
+                                         BinaryenType type,
                                          boolean mutable,
                                          BinaryenExpressionRef init);
     BinaryenGlobalRef BinaryenGetGlobal(BinaryenModuleRef module, String name);
@@ -832,7 +832,7 @@ public interface BinaryenLibrary extends Library {
 
     void TypeBuilderSetSignatureType(TypeBuilderRef builder, int index, int paramTypes, int resultTypes);
     void TypeBuilderSetStructType(TypeBuilderRef builder, int index, BinaryenType[] fieldTypes, BinaryenPackedType[] fieldPackedTypes, boolean[] fieldMutables, int numFields);
-    void TypeBuilderSetArrayType(TypeBuilderRef builder, int index, int elementType, int elementPackedType, int elementMutable);
+    void TypeBuilderSetArrayType(TypeBuilderRef builder, int index, BinaryenType elementType, BinaryenPackedType elementPackedType, boolean elementMutable);
     int TypeBuilderGetTempHeapType(TypeBuilderRef builder, int index);
     int TypeBuilderGetTempTupleType(TypeBuilderRef builder, int[] types, int numTypes);
     int TypeBuilderGetTempRefType(TypeBuilderRef builder, BinaryenHeapType heapType, int nullable);
